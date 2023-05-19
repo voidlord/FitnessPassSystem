@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FitnessPass.DB\FitnessPass.DB.csproj" />
     <ProjectReference Include="..\FitnessPass.Model\FitnessPass.Model.csproj" />
+    <ProjectReference Include="..\FitnessPass.Service\FitnessPass.Service.csproj" />
   </ItemGroup>
 
 </Project>

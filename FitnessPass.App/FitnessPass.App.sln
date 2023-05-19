@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessPass.DB", "..\Fitnes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessPass.Model", "..\FitnessPass.Model\FitnessPass.Model.csproj", "{A497A322-5F81-4F18-B716-47FD8172CD41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessPass.Service", "..\FitnessPass.Service\FitnessPass.Service.csproj", "{17D93C67-4DC8-49BC-B4AE-1D447D1A5AEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A497A322-5F81-4F18-B716-47FD8172CD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A497A322-5F81-4F18-B716-47FD8172CD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A497A322-5F81-4F18-B716-47FD8172CD41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17D93C67-4DC8-49BC-B4AE-1D447D1A5AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17D93C67-4DC8-49BC-B4AE-1D447D1A5AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17D93C67-4DC8-49BC-B4AE-1D447D1A5AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17D93C67-4DC8-49BC-B4AE-1D447D1A5AEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
