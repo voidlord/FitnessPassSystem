@@ -15,7 +15,7 @@ namespace FitnessPassApp.Data
         public float Price { get; set; }
         public int DaysValidFor { get; set; }
         public int EntriesValidFor { get; set; }
-        public bool Deleted { get; set; }
+        public bool IsDeleted { get; set; }
         public int GymId { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }
