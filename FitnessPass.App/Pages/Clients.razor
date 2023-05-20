@@ -1,0 +1,54 @@
+﻿@page "/clients"
+
+<nav>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link" href="/clients/search">Search Clients</a>
+        </li>
+    </ul>
+</nav>
+
+<h3>Add Client</h3>
+
+@inject ClientService clientService
+
+<form>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" @bind="@client.Name">
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="tel" class="form-control" id="phoneNumber" @bind="@client.PhoneNumber">
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" @bind="@client.Email">
+    </div>
+    <div class="form-group">
+        <label for="personalIdentifier">Personal Identifier</label>
+        <input type="text" class="form-control" id="personalIdentifier" @bind="@client.PersonalIdentifier">
+    </div>
+    <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" @bind="@client.Location">
+    </div>
+    <div class="form-group">
+        <label for="barcode">Bar Code</label>
+        <input type="text" class="form-control" id="barcode" @bind="@client.BarCode">
+    </div>
+    <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea class="form-control" id="notes" rows="3" @bind="@client.Notes"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" @onclick="AddNewClient">Add</button>
+</form>
+
+@code {
+    Client client { get; set; } = new Client();
+
+    async Task AddNewClient()
+    {
+        await clientService.AddClient(client);
+    }
+}

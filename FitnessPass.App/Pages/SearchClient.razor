@@ -1,0 +1,55 @@
+﻿@page "/clients/search"
+
+@inject ClientService clientService
+
+<nav>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link" href="/clients">Add Client</a>
+        </li>
+    </ul>
+</nav>
+
+<h3>Search Client</h3>
+
+@if (clients == null || clients.Count == 0)
+{
+    <p>No results</p>
+}
+
+@if (clients != null && clients.Count != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr>
+                    <td>@client.Name</td>
+                    <td>@client.PhoneNumber</td>
+                    <td>@client.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<Client> clients;
+
+    void Search()
+    {
+        clients = clientService.GetClients();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Search();
+    }
+}
