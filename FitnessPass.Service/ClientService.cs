@@ -33,5 +33,10 @@ namespace FitnessPass.Service
         {
             return appDbContext.Client.ToList();
         }
+
+        public List<Client> SearchClientByName(string name) 
+        {
+            return appDbContext.Client.Where(x => x.Name.Contains(name)).ToList();
+        }
     }
 }

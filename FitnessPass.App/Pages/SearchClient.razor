@@ -12,13 +12,22 @@
 
 <h3>Search Client</h3>
 
+<div class="form-group">
+    <input type="text" class="form-control" @bind="@searchQuery" placeholder="Enter client name" />
+</div>
+<br>
+<button class="btn btn-primary" @onclick="Search">Search</button>
+
 @if (clients == null || clients.Count == 0)
 {
+    <br>
+    <br>
     <p>No results</p>
 }
 
 @if (clients != null && clients.Count != 0)
 {
+    <br>
     <table class="table">
         <thead>
             <tr>
@@ -42,10 +51,18 @@
 
 @code {
     List<Client> clients;
+    string searchQuery;
 
     void Search()
     {
-        clients = clientService.GetClients();
+        if (String.IsNullOrWhiteSpace(searchQuery))
+        {
+            clients = clientService.GetClients();
+        } 
+        else
+        {
+            clients = clientService.SearchClientByName(searchQuery);
+        }
     }
 
     protected override async Task OnInitializedAsync()
