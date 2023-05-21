@@ -78,12 +78,12 @@ else
         }
 
         clientService.UpdateClient(client);
-        navigationManager.NavigateTo("/clients/search");
+        navigationManager.NavigateTo("/clients");
     }
 
     private void Cancel()
     {
-        navigationManager.NavigateTo("/clients/search");
+        navigationManager.NavigateTo("/clients");
     }
 
     bool ValidateForm()

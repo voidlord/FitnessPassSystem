@@ -47,6 +47,7 @@ namespace FitnessPass.Service
         public void UpdateClient(Client client) 
         {
             appDbContext.Client.Update(client);
+            appDbContext.SaveChanges();
         }
 
         public void DeleteClientById(int id) 
