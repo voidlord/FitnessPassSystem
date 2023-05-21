@@ -34,6 +34,7 @@
                 <th>Name</th>
                 <th>Phone Number</th>
                 <th>Email</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -43,7 +44,20 @@
                     <td>@client.Name</td>
                     <td>@client.PhoneNumber</td>
                     <td>@client.Email</td>
+                    <td><i class="oi oi-menu" style="cursor: pointer;" @onclick="() => ToggleClientDetails(client.ClientId)"></i></td>
                 </tr>
+                @if (expandedClientId == client.ClientId)
+                {
+                    <tr>
+                        <td colspan="5">
+                            <p>Created date: @client.CreatedDate</p>
+                            <p>Personal Identifier: @client.PersonalIdentifier</p>
+                            <p>Location: @client.Location</p>
+                            <p>Barcode: @client.BarCode</p>
+                            <p>Notes: @client.Notes</p>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -52,6 +66,7 @@
 @code {
     List<Client> clients;
     string searchQuery;
+    int expandedClientId = -1;
 
     void Search()
     {
@@ -62,6 +77,20 @@
         else
         {
             clients = clientService.SearchClientByName(searchQuery);
+        }
+
+        expandedClientId = -1;
+    }
+
+    void ToggleClientDetails(int clientId)
+    {
+        if (expandedClientId == clientId)
+        {
+            expandedClientId = -1;
+        }
+        else
+        {
+            expandedClientId = clientId;
         }
     }
 
