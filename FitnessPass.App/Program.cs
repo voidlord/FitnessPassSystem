@@ -1,4 +1,5 @@
 using FitnessPass.DB;
+using FitnessPass.DB.CompiledModels;
 using FitnessPass.Service;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -19,7 +20,8 @@ namespace FitnessPassApp
             var connectionString = builder.Configuration.GetConnectionString("url");
 
             builder.Services.AddDbContext<AppDbContext>(options => {
-                options.UseSqlServer(connectionString);
+                options.UseModel(AppDbContextModel.Instance)
+                       .UseSqlServer(connectionString);
             });
 
             var app = builder.Build();
