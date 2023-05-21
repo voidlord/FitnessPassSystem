@@ -12,7 +12,18 @@
 
 @inject ClientService clientService
 
-<form>
+@if (errorMessages != null && errorMessages.Count != 0)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in errorMessages)
+        {
+            <p>@error</p>
+        }
+    </div>
+    <br>
+}
+
+<form onsubmit="@AddNewClient">
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" @bind="@client.Name">
@@ -46,10 +57,58 @@
 </form>
 
 @code {
-    Client client { get; set; } = new Client();
+    Client client = new Client();
+    List<string> errorMessages;
 
     async Task AddNewClient()
     {
+        if (!ValidateForm())
+        {
+            return;
+        }
+
         await clientService.AddClient(client);
+    }
+
+    bool ValidateForm()
+    {
+        errorMessages = new List<string>();
+
+        if (String.IsNullOrEmpty(client.Name) || !Regex.IsMatch(client.Name, "^([A-Z][a-z]+[ -])+[A-Z][a-z]+$"))
+        {
+            errorMessages.Add("Name is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.PhoneNumber) || !Regex.IsMatch(client.PhoneNumber, "^[0][0-9]{9}$"))
+        {
+            errorMessages.Add("Phone number is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.Email) || !Regex.IsMatch(client.Email, "^([A-Za-z0-9.-])+[@][A-Za-z]+[.][a-z]+$"))
+        {
+            errorMessages.Add("Email is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.PersonalIdentifier) || !Regex.IsMatch(client.PersonalIdentifier, "^[0-9]{13}$"))
+        {
+            errorMessages.Add("Personal identifier is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.Location) || !Regex.IsMatch(client.Location, "^([A-Z][a-z]-?){1,2}$"))
+        {
+            errorMessages.Add("Location name is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.BarCode) || !Regex.IsMatch(client.BarCode, "^[0-9]+$"))
+        {
+            errorMessages.Add("Bar code is not given or invalid.");
+        }
+
+        if (errorMessages.Count != 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
