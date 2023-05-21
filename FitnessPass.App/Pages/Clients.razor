@@ -94,7 +94,7 @@
             errorMessages.Add("Personal identifier is not given or invalid.");
         }
 
-        if (String.IsNullOrEmpty(client.Location) || !Regex.IsMatch(client.Location, "^([A-Z][a-z]-?){1,2}$"))
+        if (String.IsNullOrEmpty(client.Location) || !Regex.IsMatch(client.Location, "^([A-Z][a-z]+[ -])?[A-Z][a-z]+$"))
         {
             errorMessages.Add("Location name is not given or invalid.");
         }

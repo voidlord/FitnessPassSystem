@@ -1,6 +1,7 @@
 ﻿@page "/clients/search"
 
 @inject ClientService clientService
+@inject NavigationManager navigationManager
 
 <nav>
     <ul class="nav nav-pills">
@@ -49,12 +50,16 @@
                 @if (expandedClientId == client.ClientId)
                 {
                     <tr>
-                        <td colspan="5">
+                        <td colspan="4">
                             <p>Created date: @client.CreatedDate</p>
                             <p>Personal Identifier: @client.PersonalIdentifier</p>
                             <p>Location: @client.Location</p>
                             <p>Barcode: @client.BarCode</p>
                             <p>Notes: @client.Notes</p>
+
+                            <div class="button-container">
+                                <button class="btn btn-primary" @onclick="() => NavigateToEditClient(client.ClientId)">Edit</button>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -92,6 +97,11 @@
         {
             expandedClientId = clientId;
         }
+    }
+
+    void NavigateToEditClient(int clientId)
+    {
+        navigationManager.NavigateTo($"/clients/{clientId}");
     }
 
     protected override async Task OnInitializedAsync()

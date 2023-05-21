@@ -1,0 +1,134 @@
+﻿@page "/clients/{clientId:int}"
+
+<h3>Edit Client</h3>
+
+@inject ClientService clientService
+@inject NavigationManager navigationManager
+
+@if (errorMessages != null && errorMessages.Count != 0)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in errorMessages)
+        {
+            <p>@error</p>
+        }
+    </div>
+    <br>
+}
+
+@if (client == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <form onsubmit="@Edit">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" @bind="@client.Name" />
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" class="form-control" id="phoneNumber" @bind="@client.PhoneNumber" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" @bind="@client.Email" />
+        </div>
+        <div class="form-group">
+            <label for="personalIdentifier">Personal Identifier:</label>
+            <input type="text" class="form-control" id="personalIdentifier" @bind="@client.PersonalIdentifier" />
+        </div>
+        <div class="form-group">
+            <label for="location">Location:</label>
+            <input type="text" class="form-control" id="location" @bind="@client.Location" />
+        </div>
+        <div class="form-group">
+            <label for="barcode">Barcode:</label>
+            <input type="text" class="form-control" id="barcode" @bind="@client.BarCode" />
+        </div>
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <textarea class="form-control" id="notes" rows="3" @bind="@client.Notes"></textarea>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" @onclick="Edit">Edit</button>
+            <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+        </div>
+    </form>
+}
+
+@code {
+    [Parameter]
+    public int ClientId { get; set; }
+    private Client client;
+    List<string> errorMessages;
+
+    private void LoadClientData()
+    {
+        client = clientService.GetClientById(ClientId);
+    }
+
+    private async Task Edit()
+    {
+        if (!ValidateForm())
+        {
+            return;
+        }
+
+        clientService.UpdateClient(client);
+        navigationManager.NavigateTo("/clients/search");
+    }
+
+    private void Cancel()
+    {
+        navigationManager.NavigateTo("/clients/search");
+    }
+
+    bool ValidateForm()
+    {
+        errorMessages = new List<string>();
+
+        if (String.IsNullOrEmpty(client.Name) || !Regex.IsMatch(client.Name, "^([A-Z][a-z]+[ -])+[A-Z][a-z]+$"))
+        {
+            errorMessages.Add("Name is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.PhoneNumber) || !Regex.IsMatch(client.PhoneNumber, "^[0][0-9]{9}$"))
+        {
+            errorMessages.Add("Phone number is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.Email) || !Regex.IsMatch(client.Email, "^([A-Za-z0-9.-])+[@][A-Za-z]+[.][a-z]+$"))
+        {
+            errorMessages.Add("Email is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.PersonalIdentifier) || !Regex.IsMatch(client.PersonalIdentifier, "^[0-9]{13}$"))
+        {
+            errorMessages.Add("Personal identifier is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.Location) || !Regex.IsMatch(client.Location, "^([A-Z][a-z]+[ -])?[A-Z][a-z]+$"))
+        {
+            errorMessages.Add("Location name is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(client.BarCode) || !Regex.IsMatch(client.BarCode, "^[0-9]+$"))
+        {
+            errorMessages.Add("Bar code is not given or invalid.");
+        }
+
+        if (errorMessages.Count != 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadClientData();
+    }
+}
