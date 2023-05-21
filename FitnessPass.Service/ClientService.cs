@@ -31,12 +31,12 @@ namespace FitnessPass.Service
 
         public List<Client> GetClients()
         {
-            return appDbContext.Client.ToList();
+            return appDbContext.Client.Where(x => x.IsDeleted == false).ToList();
         }
 
         public List<Client> SearchClientByName(string name) 
         {
-            return appDbContext.Client.Where(x => x.Name.Contains(name)).ToList();
+            return appDbContext.Client.Where(x => x.Name.Contains(name) && x.IsDeleted == false).ToList();
         }
 
         public Client GetClientById(int id)
@@ -47,6 +47,12 @@ namespace FitnessPass.Service
         public void UpdateClient(Client client) 
         {
             appDbContext.Client.Update(client);
+        }
+
+        public void DeleteClientById(int id) 
+        {
+            appDbContext.Client.Find(id).IsDeleted = true;
+            appDbContext.SaveChanges();
         }
     }
 }
