@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">FitnessPass.App</a>
+        <a class="navbar-brand" href="">FitnessPass</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -10,13 +10,27 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+            <NavLink class="nav-link" href="entry-tracking">
+                <span class="oi oi-account-login" aria-hidden="true"></span> Entry tracking
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
             <NavLink class="nav-link" href="clients">
                 <span class="oi oi-people" aria-hidden="true"></span> Clients
+            </NavLink>
+            <NavLink class="nav-link" href="passes">
+                <span class="oi oi-credit-card" aria-hidden="true"></span> Passes
+            </NavLink>
+            <NavLink class="nav-link" href="entries">
+                <span class="oi oi-list" aria-hidden="true"></span> Entries
+            </NavLink>
+            <NavLink class="nav-link" href="fitness-rooms">
+                <span class="oi oi-home" aria-hidden="true"></span> Fitness Rooms
+            </NavLink>
+            <hr />
+            <NavLink class="nav-link" href="pass-types">
+                <span class="oi oi-tag" aria-hidden="true"></span> Pass Types
+            </NavLink>
+            <NavLink class="nav-link" href="employees">
+                <span class="oi oi-briefcase" aria-hidden="true"></span> Employees
             </NavLink>
         </div>
     </nav>
