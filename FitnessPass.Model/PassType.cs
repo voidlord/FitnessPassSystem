@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FitnessPass.Model;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -14,11 +16,11 @@ namespace FitnessPassApp.Data
         public string Name { get; set; }
         public float Price { get; set; }
         public int DaysValidFor { get; set; }
-        public int EntriesValidFor { get; set; }
+        public int? EntriesValidFor { get; set; }
+        public Gym Gym { get; set; }
+        public int? StartTime { get; set; }
+        public int? EndTime { get; set; }
+        public int? MaxDailyUse { get; set; }
         public bool IsDeleted { get; set; }
-        public int GymId { get; set; }
-        public int StartTime { get; set; }
-        public int EndTime { get; set; }
-        public int MaxDailyUse { get; set; }
     }
 }

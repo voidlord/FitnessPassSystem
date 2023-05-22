@@ -4,6 +4,7 @@ using FitnessPass.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessPass.DB.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230522065344_ModifyPassTypeTableGymId")]
+    partial class ModifyPassTypeTableGymId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,12 +41,14 @@ namespace FitnessPass.DB.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Location")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -51,6 +56,7 @@ namespace FitnessPass.DB.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonalIdentifier")
@@ -58,9 +64,11 @@ namespace FitnessPass.DB.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClientId");
@@ -76,6 +84,10 @@ namespace FitnessPass.DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientPassId"));
 
+                    b.Property<string>("BarCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
@@ -85,23 +97,22 @@ namespace FitnessPass.DB.Migrations
                     b.Property<int>("EntryCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("FirstUsedOn")
+                    b.Property<DateTime>("FirstUsedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PassTypePassId")
+                    b.Property<int>("GymId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SalePrice")
+                    b.Property<int>("PassId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SalePrice")
                         .HasColumnType("int");
 
                     b.Property<bool>("Valid")
                         .HasColumnType("bit");
 
                     b.HasKey("ClientPassId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("PassTypePassId");
 
                     b.ToTable("ClientPass");
                 });
@@ -114,7 +125,14 @@ namespace FitnessPass.DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EntryId"));
 
+                    b.Property<string>("BarCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GymId")
                         .HasColumnType("int");
 
                     b.Property<int>("InsertedById")
@@ -123,14 +141,10 @@ namespace FitnessPass.DB.Migrations
                     b.Property<DateTime>("InsertedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PassTypePassId")
+                    b.Property<int>("PassId")
                         .HasColumnType("int");
 
                     b.HasKey("EntryId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("PassTypePassId");
 
                     b.ToTable("Entries");
                 });
@@ -199,10 +213,10 @@ namespace FitnessPass.DB.Migrations
                     b.Property<int>("DaysValidFor")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EndTime")
+                    b.Property<int>("EndTime")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EntriesValidFor")
+                    b.Property<int>("EntriesValidFor")
                         .HasColumnType("int");
 
                     b.Property<int>("GymId")
@@ -211,7 +225,7 @@ namespace FitnessPass.DB.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("MaxDailyUse")
+                    b.Property<int>("MaxDailyUse")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -221,63 +235,12 @@ namespace FitnessPass.DB.Migrations
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
-                    b.Property<int?>("StartTime")
+                    b.Property<int>("StartTime")
                         .HasColumnType("int");
 
                     b.HasKey("PassId");
 
-                    b.HasIndex("GymId");
-
                     b.ToTable("PassType");
-                });
-
-            modelBuilder.Entity("FitnessPass.Model.ClientPass", b =>
-                {
-                    b.HasOne("FitnessPass.Model.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitnessPassApp.Data.PassType", "PassType")
-                        .WithMany()
-                        .HasForeignKey("PassTypePassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("PassType");
-                });
-
-            modelBuilder.Entity("FitnessPass.Model.Entries", b =>
-                {
-                    b.HasOne("FitnessPass.Model.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitnessPassApp.Data.PassType", "PassType")
-                        .WithMany()
-                        .HasForeignKey("PassTypePassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("PassType");
-                });
-
-            modelBuilder.Entity("FitnessPassApp.Data.PassType", b =>
-                {
-                    b.HasOne("FitnessPass.Model.Gym", "Gym")
-                        .WithMany()
-                        .HasForeignKey("GymId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Gym");
                 });
 #pragma warning restore 612, 618
         }
