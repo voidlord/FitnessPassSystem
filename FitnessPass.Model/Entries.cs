@@ -12,9 +12,13 @@ namespace FitnessPass.Model
     public class Entries {
         [Key]
         public int EntryId { get; set; }
+        [Required]
         public Client Client { get; set; }
+        [Required]
         public PassType PassType { get; set; }
+        [Required]
         public int InsertedById { get; set; }
+        [Required]
         public DateTime InsertedOn { get; set; }
     }
 }

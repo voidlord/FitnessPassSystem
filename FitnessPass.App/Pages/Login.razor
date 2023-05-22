@@ -1,0 +1,60 @@
+﻿@page "/login"
+@attribute [AllowAnonymous]
+
+@inject UserService userService
+@inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
+
+<div class="text-center">
+    <EditForm class="form-signin mb-4" Model="@_credential" OnSubmit="@Authenticate">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <InputText class="form-control" id="email" aria-describedby="emailHelp" @bind-Value=@_credential.Email />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText type="password" class="form-control" id="password" @bind-Value=@_credential.Password />
+        </div>
+        <div class="form-group">
+            <button type="submit" id="login" name="login" class="btn btn-primary">Login</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    public class Credential {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+    private Credential _credential = new Credential();
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthTask { get; set; }
+    [Inject]
+    private AuthenticationStateProvider AuthState { get; set; }
+
+    private System.Security.Claims.ClaimsPrincipal user;
+
+    protected async override Task OnInitializedAsync() {
+        var authState = await AuthTask;
+        this.user = authState.User;
+    }
+
+    public async Task Authenticate() {
+        try {
+            User user = userService.Login(_credential.Email, _credential.Password);
+            if (user != null) {
+                var customAuthStateProvider = (Auth.CustomAuthenticationStateProvider)AuthState;
+                await customAuthStateProvider.UpdateAuthenticationState(new Auth.UserSession
+                    {
+                        Id = user.UserId,
+                        Email = user.Email,
+                        Role = user.IsAdmin ? "Admin" : "User"
+                });
+                navigationManager.NavigateTo("/", true);
+            }
+        } catch {
+            await jsRuntime.InvokeVoidAsync("alert", "Invalid credentials");
+        }
+    }
+}

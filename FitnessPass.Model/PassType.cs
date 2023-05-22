@@ -13,14 +13,19 @@ namespace FitnessPassApp.Data
     {
         [Key]
         public int PassId { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public float Price { get; set; }
+        [Required]
         public int DaysValidFor { get; set; }
         public int? EntriesValidFor { get; set; }
+        [Required]
         public Gym Gym { get; set; }
         public int? StartTime { get; set; }
         public int? EndTime { get; set; }
         public int? MaxDailyUse { get; set; }
+        [Required]
         public bool IsDeleted { get; set; }
     }
 }

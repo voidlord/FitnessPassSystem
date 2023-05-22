@@ -1,9 +1,13 @@
+using FitnessPass.App.Auth;
 using FitnessPass.DB;
 using FitnessPass.DB.CompiledModels;
 using FitnessPass.Service;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FitnessPassApp
 {
@@ -16,6 +20,10 @@ namespace FitnessPassApp
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<ClientService>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<ProtectedSessionStorage>();
+            builder.Services.AddScoped<ClaimsPrincipal>();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
             var connectionString = builder.Configuration.GetConnectionString("url");
 

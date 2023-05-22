@@ -13,12 +13,17 @@ namespace FitnessPass.Model
     public class ClientPass {
         [Key]
         public int ClientPassId { get; set; }
+        [Required]
         public Client Client { get; set; }
+        [Required]
         public PassType PassType { get; set; }
+        [Required]
         public DateTime CreatedOn { get; set; }
+        [Required]
         public int EntryCount { get; set; }
         public int? SalePrice { get; set; }
         public DateTime? FirstUsedOn { get; set; }
+        [Required]
         public bool Valid { get; set; }
     }
 }
