@@ -12,11 +12,8 @@ namespace FitnessPass.App.Auth
             get { return _sessionStorage; }
         }
 
-        private ClaimsPrincipal CurrentUser { get; set; }
-
         public CustomAuthenticationStateProvider(ProtectedSessionStorage sessionStorage, ClaimsPrincipal user) {
             this._sessionStorage = sessionStorage;
-            this.CurrentUser = this.GetAnonymous();
         }
 
         private ClaimsPrincipal GetUser(string id, string email, string role) {
@@ -56,17 +53,17 @@ namespace FitnessPass.App.Auth
         }
 
         public async Task UpdateAuthenticationState(UserSession userSession) {
+            ClaimsPrincipal claimsPrincipal;
 
             if (userSession == null) {
                 await _sessionStorage.DeleteAsync("UserSession");
-                this.CurrentUser = GetAnonymous();
+                claimsPrincipal = GetAnonymous();
             } else {
                 await _sessionStorage.SetAsync("UserSession", userSession);
-                this.CurrentUser = this.GetUser(userSession.Id.ToString(), userSession.Email, userSession.Role);
+                claimsPrincipal = this.GetUser(userSession.Id.ToString(), userSession.Email, userSession.Role);
             }
 
-            var task = this.GetAuthenticationStateAsync();
-            this.NotifyAuthenticationStateChanged(task);
+            this.NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
     }
 }

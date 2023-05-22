@@ -1,11 +1,12 @@
 ﻿@inject NavigationManager NavigationManager
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? AuthState { get; set; } = null;
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
 
     protected override async Task OnInitializedAsync() {
-        var authState = await AuthState!;
+        var customAuthStateProvider = (Auth.CustomAuthenticationStateProvider)AuthStateProvider;
+        var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
 
         if (authState?.User?.Identity == null || !authState.User.Identity.IsAuthenticated) {
             var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
