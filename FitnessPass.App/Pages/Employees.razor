@@ -60,7 +60,7 @@ else
                             <p>CreatedOn: @user.CreatedOn</p>
 
                             <div class="button-container">
-                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-primary" @onclick="() => NavigateToEditUser(user.UserId)">Edit</button>
                                 <button class="btn btn-danger">Delete</button>
                             </div>
                         </td>
@@ -100,6 +100,11 @@ else
         {
             expandedUserId = userId;
         }
+    }
+
+    void NavigateToEditUser(int userId)
+    {
+        navigationManager.NavigateTo($"/employees/{userId}");
     }
 
     protected override async Task OnInitializedAsync()

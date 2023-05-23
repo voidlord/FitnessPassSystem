@@ -1,0 +1,105 @@
+﻿@page "/employees/{userId:int}"
+
+@inject NavigationManager navigationManager
+@inject UserService userService
+
+<h3>Edit Employee</h3>
+
+@if (errorMessages != null && errorMessages.Count != 0)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in errorMessages)
+        {
+            <p>@error</p>
+        }
+    </div>
+    <br>
+}
+
+<form onsubmit="@Edit">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" @bind="@user.Name">
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" @bind="@user.Email">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" @bind="@user.Password">
+    </div>
+    <div class="form-group">
+        <label for="isAdmin">Status:</label>
+        <div>
+            <input type="radio" id="isAdmin" @bind="@user.IsAdmin"/>
+            <label for="isAdmin">Admin</label>
+        </div>
+    </div>
+    <br>
+    <div class="form-group">
+        <br>
+        <button class="btn btn-primary" @onclick="Edit">Edit</button>
+        <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+    private User user;
+    List<string> errorMessages;
+
+    private void LoadClientData()
+    {
+        user = userService.GetUserById(UserId);
+    }
+
+    private async Task Edit()
+    {
+        if (!ValidateForm())
+        {
+            return;
+        }
+
+        userService.UpdateUser(user);
+        navigationManager.NavigateTo("/employees");
+    }
+
+    private void Cancel()
+    {
+        navigationManager.NavigateTo("/employees");
+    }
+
+    bool ValidateForm()
+    {
+        errorMessages = new List<string>();
+
+        if (String.IsNullOrEmpty(user.Name) || !Regex.IsMatch(user.Name, "^([A-Z][a-z]+[ -])*[A-Z][a-z]+$"))
+        {
+            errorMessages.Add("Name is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(user.Email) || !Regex.IsMatch(user.Email, "^([A-Za-z0-9.-])+[@][A-Za-z]+[.][a-z]+$"))
+        {
+            errorMessages.Add("Email is not given or invalid.");
+        }
+
+        if (String.IsNullOrEmpty(user.Password))
+        {
+            errorMessages.Add("Password is not given.");
+        }
+
+        if (errorMessages.Count != 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadClientData();
+    }
+}
