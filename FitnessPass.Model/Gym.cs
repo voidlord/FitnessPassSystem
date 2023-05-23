@@ -11,9 +11,7 @@ namespace FitnessPass.Model
     public class Gym {
         [Key]
         public int GymId { get; set; }
-        [Required]
         public string Name { get; set; }
-        [Required]
         public bool IsDeleted { get; set; }
     }
 }

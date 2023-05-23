@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,19 +14,16 @@ namespace FitnessPassApp.Data
     {
         [Key]
         public int PassId { get; set; }
-        [Required]
         public string Name { get; set; }
-        [Required]
         public float Price { get; set; }
-        [Required]
         public int DaysValidFor { get; set; }
-        public int? EntriesValidFor { get; set; }
-        [Required]
+        public int EntriesValidFor { get; set; }
         public Gym Gym { get; set; }
-        public int? StartTime { get; set; }
-        public int? EndTime { get; set; }
-        public int? MaxDailyUse { get; set; }
-        [Required]
+        [ForeignKey("Gym")]
+        public int GymFK { get; set; }
+        public int StartTime { get; set; }
+        public int EndTime { get; set; }
+        public int MaxDailyUse { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
