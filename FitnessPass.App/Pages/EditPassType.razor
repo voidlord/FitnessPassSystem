@@ -1,0 +1,160 @@
+﻿@page "/pass-types/{passTypeId:int}"
+
+@inject PassTypeService passTypeService
+@inject GymService gymService
+@inject NavigationManager navigationManager
+
+<h3>Edit Pass Type</h3>
+
+@if (errorMessages != null && errorMessages.Count != 0)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in errorMessages)
+        {
+            <p>@error</p>
+        }
+    </div>
+    <br>
+}
+
+<div onsubmit="@Edit">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" @bind="passType.Name" />
+    </div>
+    <div class="form-group">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price" @bind="passType.Price" />
+    </div>
+    <div class="form-group">
+        <label for="daysValidFor">Days Valid For</label>
+        <input type="number" class="form-control" id="daysValidFor" @bind="passType.DaysValidFor" />
+    </div>
+    <div class="form-group">
+        <label for="entriesValidFor">Entries Valid For</label>
+        <input type="number" class="form-control" id="entriesValidFor" @bind="passType.EntriesValidFor" />
+    </div>
+    <div class="form-group">
+        <label for="gymId">Gym</label>
+        <input type="number" class="form-control" id="gymId" @bind="passType.GymId" />
+        @*        <select id="gymId" @bind="passType.GymId">
+        <option value="">Select a Gym</option>
+        @if (gyms != null)
+        {
+        @foreach (var gym in gyms)
+        {
+        <option value="@gym.GymId">@gym.Name</option>
+        }
+        }
+        else
+        {
+        <option value=0>No gyms</option>
+        }
+        </select>*@
+    </div>
+    <div class="form-group">
+        <label for="startTime">Start Time</label>
+        <input type="number" class="form-control" id="startTime" @bind="passType.StartTime" />
+    </div>
+    <div class="form-group">
+        <label for="endTime">End Time</label>
+        <input type="number" class="form-control" id="endTime" @bind="passType.EndTime" />
+    </div>
+    <div class="form-group">
+        <label for="maxDailyUse">Max Daily Use</label>
+        <input type="number" class="form-control" id="maxDailyUse" @bind="passType.MaxDailyUse" />
+    </div>
+    <div class="form-group">
+        <br>
+        <button class="btn btn-primary" @onclick="Edit">Edit</button>
+        <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int PassTypeId { get; set; }
+    private PassType passType = new PassType();
+    List<string> errorMessages;
+    private List<Gym> gyms;
+
+    private void LoadClientData()
+    {
+        passType = passTypeService.GetPassTypeById(PassTypeId);
+    }
+
+
+    private void Edit()
+    {
+        if (!ValidateForm())
+            return;
+
+        passTypeService.UpdatePassType(passType);
+        navigationManager.NavigateTo("/clients");
+    }
+
+    private void Cancel()
+    {
+        navigationManager.NavigateTo("/clients");
+    }
+
+    private bool ValidateForm()
+    {
+        errorMessages = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(passType.Name))
+        {
+            errorMessages.Add("Name is not given or invalid.");
+        }
+
+        if (passType.Price <= 0)
+        {
+            errorMessages.Add("Price is not given or invalid.");
+        }
+
+        if (passType.DaysValidFor <= 0)
+        {
+            errorMessages.Add("Days valid for is not given or invalid.");
+        }
+
+        if (passType.EntriesValidFor <= 0)
+        {
+            errorMessages.Add("Entries valid for is invalid.");
+        }
+
+        if (passType.GymId < 1)
+        {
+            errorMessages.Add("Gym id is not given or not chosen.");
+        }
+
+        if (passType.StartTime < 0 || passType.StartTime > 23)
+        {
+            Console.WriteLine(passType.StartTime.ToString());
+            errorMessages.Add("Start time is invalid.");
+        }
+
+        if (passType.EndTime <= 0 || passType.EndTime > 23 || passType.StartTime >= passType.EndTime)
+        {
+            Console.WriteLine(passType.EndTime.ToString());
+            errorMessages.Add("End time is invalid.");
+        }
+
+        if (passType.MaxDailyUse <= 0)
+        {
+            errorMessages.Add("Max daily use is invalid.");
+        }
+
+        if (errorMessages.Count != 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadClientData();
+        gyms = /*gymService.GetGyms();*/ new List<Gym>();
+    }
+}
