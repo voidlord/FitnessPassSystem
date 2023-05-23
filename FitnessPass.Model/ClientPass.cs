@@ -15,10 +15,10 @@ namespace FitnessPass.Model
         public int ClientPassId { get; set; }
         public Client Client { get; set; }
         [ForeignKey("Client")]
-        public int ClientFK { get; set; }
+        public int ClientId { get; set; }
         public PassType PassType { get; set; }
         [ForeignKey("PassType")]
-        public int PassTypeFK { get; set; }
+        public int PassTypeId { get; set; }
         public DateTime CreatedOn { get; set; }
         public int EntryCount { get; set; }
         public int SalePrice { get; set; }

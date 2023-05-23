@@ -20,7 +20,7 @@ namespace FitnessPassApp.Data
         public int EntriesValidFor { get; set; }
         public Gym Gym { get; set; }
         [ForeignKey("Gym")]
-        public int GymFK { get; set; }
+        public int GymId { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }
         public int MaxDailyUse { get; set; }
