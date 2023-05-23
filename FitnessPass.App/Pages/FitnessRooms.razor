@@ -1,0 +1,49 @@
+﻿@page "/fitness-rooms"
+
+<h3>Fitness Rooms</h3>
+
+@if (gyms == null || gyms.Count == 0)
+{
+    <br>
+    <br>
+    <p>No results</p>
+}
+else
+{
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gym in gyms)
+            {
+                <tr>
+                    <td>@gym.GymId</td>
+                    <td>@gym.Name</td>
+                    @if (gym.IsDeleted == false)
+                    {
+                        <td>Active</td>
+                    }
+                    else
+                    {
+                        <td>Inactive</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Gym> gyms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        gyms = /*gymService.GetGyms();*/ new List<Gym>();
+    }
+}
