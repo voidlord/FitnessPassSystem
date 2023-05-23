@@ -23,7 +23,6 @@ namespace FitnessPass.Service
         public Task AddClient(Client client)
         {
             client.IsDeleted = false;
-            client.Photo = "a";
             client.CreatedDate = DateTime.Now;
             appDbContext.Client.Add(client);
             appDbContext.SaveChanges();
