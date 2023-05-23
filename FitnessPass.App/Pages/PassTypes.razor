@@ -1,8 +1,136 @@
 ﻿@page "/pass-types"
 @attribute [Authorize]
 
+@inject PassTypeService passTypeService
+@inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
+
+<nav>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link" href="/pass-types/add">Add Pass Type</a>
+        </li>
+    </ul>
+</nav>
+
 <h3>Pass Types</h3>
 
-@code {
+<div class="form-group">
+    <input type="text" class="form-control" @bind="@searchQuery" placeholder="Enter pass type name" />
+</div>
+<br>
+<button class="btn btn-primary" @onclick="Search">Search</button>
 
+@if (passTypes == null)
+{
+    <p>Loading...</p>
+}
+else if (passTypes.Count == 0)
+{
+    <p>No pass types found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Days valid for</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var passType in passTypes)
+            {
+                <tr>
+                    <td>@passType.Name</td>
+                    <td>@passType.Price</td>
+                    <td>@passType.DaysValidFor</td>
+                    <td><i class="oi oi-menu" style="cursor: pointer;" @onclick="() => TogglePassTypeDetails(passType.PassId)"></i></td>
+                </tr>
+                @if (expandedPassTypeId == passType.PassId)
+                {
+                    <tr>
+                        <td colspan="4">
+                            <p>Gym id: @passType.GymId</p>
+                            <p>Entries valid for: @passType.EntriesValidFor</p>
+                            <p>Start time: @passType.StartTime</p>
+                            <p>End time: @passType.EndTime</p>
+                            <p>Max daily use: @passType.MaxDailyUse</p>
+
+                            <div class="button-container">
+                                <button class="btn btn-sm btn-primary" @onclick="() => EditPassType(passType.PassId)">Edit</button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => ChangePassTypeStatus(passType.PassId)">@StatusOfPassType(expandedPassTypeId)</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<PassType> passTypes;
+    private string searchQuery;
+    int expandedPassTypeId = -1;
+    private Dictionary<bool, string> status = new Dictionary<bool, string>() { { false, "Inactivate" }, { true, "Activate" } };
+
+    private void LoadPassTypes()
+    {
+        passTypes = passTypeService.GetPassTypes();
+    }
+
+    private void Search()
+    {
+        if (String.IsNullOrWhiteSpace(searchQuery))
+        {
+            passTypes = passTypeService.GetPassTypes();
+        }
+        else
+        {
+            passTypes = passTypeService.SearchPassTypeByName(searchQuery);
+        }
+
+        expandedPassTypeId = -1;
+    }
+
+    void TogglePassTypeDetails(int passId)
+    {
+        if (expandedPassTypeId == passId)
+        {
+            expandedPassTypeId = -1;
+        }
+        else
+        {
+            expandedPassTypeId = passId;
+        }
+    }
+
+    private void EditPassType(int passId)
+    {
+        navigationManager.NavigateTo($"/pass-types/{passId}");
+    }
+
+
+    private async Task ChangePassTypeStatus(int passId)
+    {
+        var confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to change the status of this pass type?");
+
+        if (confirmed)
+        {
+            passTypeService.ChangePassTypeStatusById(passId);
+        }
+    }
+
+    private string StatusOfPassType(int id)
+    {
+        return status[passTypes.Where(x => x.PassId == id).First().IsDeleted];
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadPassTypes();
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using FitnessPass.DB;
 using FitnessPass.Model;
 using FitnessPassApp.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +12,29 @@ namespace FitnessPass.Service
 {
     public class PassTypeService
     {
-        public PassTypeService(AppDbContext appDbContext)
+        public PassTypeService(AppDbContext appDbContext, GymService gymService)
         {
             this.appDbContext = appDbContext;
+            this.gymService = gymService;
         }
 
         private AppDbContext appDbContext;
+        private GymService gymService;
 
-        public List<PassType> GetPassTypes() 
+        public List<PassType> GetPassTypes()
         {
+            //var passTypes = appDbContext.PassType.ToList();
+            //foreach (var passType in passTypes)
+            //{
+            //    passType.Gym = gymService.GetGymById(passType.GymId);
+            //}
+
+            //return passTypes;
+
             return appDbContext.PassType.ToList();
         }
 
-        public void AddPassType(PassType passType) 
+        public void AddPassType(PassType passType)
         {
             passType.IsDeleted = false;
             appDbContext.PassType.Add(passType);
@@ -35,7 +46,7 @@ namespace FitnessPass.Service
             return appDbContext.PassType.Where(x => x.Name.Contains(name)).ToList();
         }
 
-        public PassType GetPassTypeById(int id) 
+        public PassType GetPassTypeById(int id)
         {
             return appDbContext.PassType.Find(id) ?? new PassType();
         }
@@ -46,9 +57,9 @@ namespace FitnessPass.Service
             appDbContext.SaveChanges();
         }
 
-        public void DeletePassTypeById(int id)
-        {
-            appDbContext.PassType.Find(id).IsDeleted = true;
+        public void ChangePassTypeStatusById(int id)
+        { 
+            appDbContext.PassType.Find(id).IsDeleted = !appDbContext.PassType.Find(id).IsDeleted;
             appDbContext.SaveChanges();
         }
     }
