@@ -3,6 +3,7 @@
 
 @inject NavigationManager navigationManager
 @inject ClientService clientService
+@inject IJSRuntime jsRuntime
 
 <nav>
     <ul class="nav nav-pills">
@@ -54,13 +55,44 @@
         <label for="notes">Notes</label>
         <textarea class="form-control" id="notes" rows="3" @bind="@client.Notes"></textarea>
     </div>
+    <div class="form-group">
+        <label for="photo">Photo</label> <br />
+        <video id="videoFeed" width="320" height="240" /><canvas class="d-none" id="currentFrame" width="320" height="240" /><br />
+        <button type="button" class="btn btn-primary mb-3" @onclick="OpenCamera">Open</button>
+        <button type="button" class="btn btn-primary mb-3" @onclick="CloseCamera">Close</button>
+        <button type="button" class="btn btn-primary mb-3" @onclick="CaptureFrame">Capture</button><br />
+        @if (!string.IsNullOrEmpty(frameUri)) {
+            <img src="@frameUri" />
+        }
+    </div>
     <br>
-    <button type="submit" class="btn btn-primary" @onclick="AddNewClient">Add</button>
+    <button type="submit" class="btn btn-primary" @onclick="AddNewClient">Add</button><br />
 </form>
 
 @code {
+    private DotNetObjectReference<AddClient>? dotNetHelper;
+
     Client client = new Client();
     List<string> errorMessages;
+    private string frameUri;
+
+    private async Task OpenCamera() {
+        await jsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
+    }
+
+    private async Task CloseCamera() {
+        await jsRuntime.InvokeVoidAsync("stopVideo", "videoFeed");
+    }
+
+    private async Task CaptureFrame() {
+        await jsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void ProcessImage(string imageString) {
+        client.Photo = imageString;
+        frameUri = imageString;
+    }
 
     async Task AddNewClient()
     {
