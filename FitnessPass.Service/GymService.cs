@@ -30,5 +30,10 @@ namespace FitnessPass.Service
         {
             return appDbContext.Gym.Where(x => x.Name == name).First();
         }
+
+        public List<Gym> GetGyms() 
+        {
+            return appDbContext.Gym.ToList();
+        }
     }
 }
