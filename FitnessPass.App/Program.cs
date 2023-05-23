@@ -21,6 +21,8 @@ namespace FitnessPassApp
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<ClientService>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<PassTypeService>();
+            builder.Services.AddScoped<GymService>();
             builder.Services.AddScoped<ProtectedSessionStorage>();
             builder.Services.AddScoped<ClaimsPrincipal>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
