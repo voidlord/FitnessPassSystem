@@ -32,7 +32,7 @@ namespace FitnessPass.Service {
             appDbContext.SaveChanges();
         }
 
-        public List<User> SearchPassTypeByName(string name)
+        public List<User> SearchUserByName(string name)
         {
             return appDbContext.User.Where(x => x.Name.Contains(name)).ToList();
         }

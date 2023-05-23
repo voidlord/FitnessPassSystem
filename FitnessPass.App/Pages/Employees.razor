@@ -1,7 +1,111 @@
 ﻿@page "/employees"
 
+@inject UserService userService
+@inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
+
+<nav>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link" href="/employees/add">Add Employee</a>
+        </li>
+    </ul>
+</nav>
+
 <h3>Employees</h3>
 
-@code {
+<h3>Search Client</h3>
 
+<div class="form-group">
+    <input type="text" class="form-control" @bind="@searchQuery" placeholder="Enter user name" />
+</div>
+<br>
+<button class="btn btn-primary" @onclick="Search">Search</button>
+
+@if (users == null || users.Count == 0)
+{
+    <br>
+    <br>
+    <p>No results</p>
+}
+else
+{
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    @if (@user.IsAdmin == true) {
+                        <td>Admin</td>
+                    }
+                    else {
+                        <td>User</td>
+                    }
+                    <td><i class="oi oi-menu" style="cursor: pointer;" @onclick="() => ToggleUserDetails(user.UserId)"></i></td>
+                </tr>
+                @if (expandedUserId == user.UserId)
+                {
+                    <tr>
+                        <td colspan="4">
+                            <p>Password: @user.Password</p>
+                            <p>CreatedOn: @user.CreatedOn</p>
+
+                            <div class="button-container">
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<User> users;
+    string searchQuery;
+    int expandedUserId = -1;
+
+    void Search()
+    {
+        if (String.IsNullOrWhiteSpace(searchQuery))
+        {
+            users = userService.GetUsers();
+        }
+        else
+        {
+            users = userService.SearchUserByName(searchQuery);
+        }
+
+        expandedUserId = -1;
+    }
+
+    void ToggleUserDetails(int userId)
+    {
+        if (expandedUserId == userId)
+        {
+            expandedUserId = -1;
+        }
+        else
+        {
+            expandedUserId = userId;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Search();
+    }
 }
