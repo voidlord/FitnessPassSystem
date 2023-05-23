@@ -1,4 +1,5 @@
 using FitnessPass.App.Auth;
+using FitnessPass.App.Mail;
 using FitnessPass.DB;
 using FitnessPass.DB.CompiledModels;
 using FitnessPass.Service;
@@ -21,9 +22,13 @@ namespace FitnessPassApp
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<ClientService>();
             builder.Services.AddScoped<UserService>();
+
             builder.Services.AddScoped<ProtectedSessionStorage>();
             builder.Services.AddScoped<ClaimsPrincipal>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
+            builder.Services.AddSingleton(builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            builder.Services.AddScoped<EmailService>();
 
             var connectionString = builder.Configuration.GetConnectionString("url");
 

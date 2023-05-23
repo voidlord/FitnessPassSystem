@@ -1,17 +1,18 @@
 ﻿@page "/clients/add"
 @attribute [Authorize]
 
+@inject NavigationManager navigationManager
+@inject ClientService clientService
+
 <nav>
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a class="nav-link" href="/clients">Search Clients</a>
+            <button class="btn btn-primary" @onclick="@(()=> navigationManager.NavigateTo("/clients"))">Search</button>
         </li>
     </ul>
 </nav>
 
 <h3>Add Client</h3>
-
-@inject ClientService clientService
 
 @if (errorMessages != null && errorMessages.Count != 0)
 {

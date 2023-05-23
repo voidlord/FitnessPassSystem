@@ -1,6 +1,7 @@
 ﻿using FitnessPass.DB;
 using FitnessPass.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,10 @@ namespace FitnessPass.Service
         {
             appDbContext.Client.Find(id).IsDeleted = true;
             appDbContext.SaveChanges();
+        }
+
+        public List<string> GetEmails() {
+            return appDbContext.Client.Select(x => x.Email).Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
         }
     }
 }
