@@ -21,7 +21,7 @@ namespace FitnessPass.Service {
 
         public List<User> GetUsers() 
         {
-            return appDbContext.User.ToList();
+            return appDbContext.User.Where(x => x.IsDeleted == false).ToList();
         }
 
         public void AddUser(User user)
@@ -34,7 +34,7 @@ namespace FitnessPass.Service {
 
         public List<User> SearchUserByName(string name)
         {
-            return appDbContext.User.Where(x => x.Name.Contains(name)).ToList();
+            return appDbContext.User.Where(x => x.Name.Contains(name) && x.IsDeleted == false).ToList();
         }
 
         public User GetUserById(int id)
