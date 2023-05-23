@@ -61,7 +61,7 @@ else
 
                             <div class="button-container">
                                 <button class="btn btn-sm btn-primary" @onclick="() => EditPassType(passType.PassId)">Edit</button>
-                                <button class="btn btn-sm btn-danger">Delete</button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => ChangePassTypeStatus(passType.PassId)">@StatusOfPassType(expandedPassTypeId)</button>
                             </div>
                         </td>
                     </tr>
@@ -75,6 +75,7 @@ else
     private List<PassType> passTypes;
     private string searchQuery;
     int expandedPassTypeId = -1;
+    private Dictionary<bool, string> status = new Dictionary<bool, string>() { { false, "Inactivate" }, { true, "Activate" } };
 
     private void LoadPassTypes()
     {
@@ -110,6 +111,22 @@ else
     private void EditPassType(int passId)
     {
         navigationManager.NavigateTo($"/pass-types/{passId}");
+    }
+
+
+    private async Task ChangePassTypeStatus(int passId)
+    {
+        var confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to change the status of this pass type?");
+
+        if (confirmed)
+        {
+            passTypeService.ChangePassTypeStatusById(passId);
+        }
+    }
+
+    private string StatusOfPassType(int id)
+    {
+        return status[passTypes.Where(x => x.PassId == id).First().IsDeleted];
     }
 
     protected override async Task OnInitializedAsync()

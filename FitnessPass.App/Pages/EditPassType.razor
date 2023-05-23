@@ -90,12 +90,12 @@
             return;
 
         passTypeService.UpdatePassType(passType);
-        navigationManager.NavigateTo("/clients");
+        navigationManager.NavigateTo("/pass-types");
     }
 
     private void Cancel()
     {
-        navigationManager.NavigateTo("/clients");
+        navigationManager.NavigateTo("/pass-types");
     }
 
     private bool ValidateForm()

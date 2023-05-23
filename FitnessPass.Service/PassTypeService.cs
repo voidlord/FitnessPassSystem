@@ -57,9 +57,9 @@ namespace FitnessPass.Service
             appDbContext.SaveChanges();
         }
 
-        public void DeletePassTypeById(int id)
-        {
-            appDbContext.PassType.Find(id).IsDeleted = true;
+        public void ChangePassTypeStatusById(int id)
+        { 
+            appDbContext.PassType.Find(id).IsDeleted = !appDbContext.PassType.Find(id).IsDeleted;
             appDbContext.SaveChanges();
         }
     }
