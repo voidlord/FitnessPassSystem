@@ -19,6 +19,21 @@ namespace FitnessPass.Service {
             return appDbContext.ClientPass.Where(x => x.ClientId == clientId).Include(x => x.PassType).ToList();
         }
 
+        public void AddUse(int clientPassId) {
+            ClientPass clientPass = appDbContext.ClientPass.Find(clientPassId);
+
+            if (clientPass.FirstUsedOn.CompareTo(DateTime.Parse("1/1/1970")) < 0) {
+                clientPass.FirstUsedOn = DateTime.Now;
+            }
+
+            if (clientPass != null) {
+                clientPass.EntryCount++;
+
+                appDbContext.ClientPass.Update(clientPass);
+                appDbContext.SaveChanges();
+            }
+        }
+
         public List<ClientPass> GetPasses()
         {
             return appDbContext.ClientPass.Include(x => x.Client).Include(x => x.PassType).ToList();

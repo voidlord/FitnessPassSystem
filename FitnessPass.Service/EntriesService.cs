@@ -47,5 +47,12 @@ namespace FitnessPass.Service
         {
             return date1.Year.Equals(date2.Year) && date1.Month.Equals(date2.Month) && date1.Day.Equals(date2.Day);
         }
+
+        public void CreateEntry(Entries entry) {
+            entry.InsertedOn = DateTime.Now;
+
+            appDbContext.Entries.Add(entry);
+            appDbContext.SaveChanges();
+        }
     }
 }

@@ -1,0 +1,153 @@
+﻿@page "/entry-tracking"
+
+@inject ClientService clientService
+@inject ClientPassService clientPassService
+@inject EntriesService entriesService
+
+<h3>EntryTracking</h3>
+
+<div class="form-group">
+    <input type="text" class="form-control" @bind="@barCode" placeholder="Enter barcode" />
+</div>
+<br>
+<button class="btn btn-primary" @onclick="FindBarcode">Find</button>
+
+@if (error) {
+    <div class="alert alert-danger">
+        <p>Could not find client</p>
+    </div>
+}
+
+@if (client != null) {
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@client.Name</td>
+                <td>@client.PhoneNumber</td>
+                <td>@client.Email</td>
+                <td><i class="oi oi-menu" style="cursor: pointer;" @onclick="() => ToggleClientDetails()"></i></td>
+            </tr>
+            @if (details) {
+                <tr>
+                    <td colspan="4">
+                        <p>Created date: @client.CreatedDate</p>
+                        <p>Personal Identifier: @client.PersonalIdentifier</p>
+                        <p>Location: @client.Location</p>
+                        <p>Barcode: @client.BarCode</p>
+                        <p>Notes: @client.Notes</p>
+                        <p>Photo:</p>
+                        <img src="@client.Photo" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <br>
+        <br>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Uses</th>
+                <th>Time</th>
+                <th>Expires on</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pass in passes) {
+                <tr>
+                    <td>@pass.PassType.Name</td>
+                    <td>@GetUsesLeft(pass.PassType.EntriesValidFor, pass.EntryCount)</td>
+                    <td>@pass.PassType.StartTime-@pass.PassType.EndTime</td>
+                    <td>@GetExpireDate(pass)</td>
+                    <td>
+                        @if (IsValid(pass))
+                        {
+                            @if (!used.Contains(pass.ClientPassId))
+                            {
+                                <button class="btn btn-primary" style="border-color:darkgreen; background-color:green" @onclick="() => Entry(pass)">Entry</button>
+                            } else {
+                                <button class="btn btn-primary" style="border-color:darkorange; background-color:orange">Used</button>
+                            }
+                        } else {
+                            <button class="btn btn-primary" style="border-color:gray; background-color:darkgray">Expired</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    string barCode;
+    Client client;
+    List<ClientPass> passes;
+    List<int> used = new List<int>();
+    bool error = false;
+    bool details = false;
+
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    void FindBarcode() {
+        client = clientService.GetClientByBarcode(barCode);
+
+        if (client == null) {
+            error = true;
+        } else {
+            passes = clientPassService.GetPassesByClientId(client.ClientId);
+        }
+    }
+
+    void ToggleClientDetails() {
+        details = !details;
+    }
+
+    string GetUsesLeft(int entriesValidFor, int entryCount) {
+        return $"{entriesValidFor}/{entryCount}";
+    }
+
+    string GetExpireDate(ClientPass pass) {
+        DateTime createdOn = pass.CreatedOn;
+        int daysValidFor = pass.PassType.DaysValidFor;
+
+        return createdOn.AddDays(daysValidFor).ToString("yyyy/MMM/dd");
+    }
+
+    bool IsValid(ClientPass pass) {
+        if (pass.PassType.EntriesValidFor - pass.EntryCount <= 0) {
+            return false;
+        }
+
+        DateTime createdOn = pass.CreatedOn;
+        int daysValidFor = pass.PassType.DaysValidFor;
+
+        return createdOn.AddDays(daysValidFor).CompareTo(DateTime.Today) > 0;
+    }
+
+    async void Entry(ClientPass pass) {
+        used.Add(pass.ClientPassId);
+
+        Entries entry = new Entries();
+        entry.ClientId = pass.ClientId;
+        entry.PassTypeId = pass.PassTypeId;
+
+        var customAuthStateProvider = (Auth.CustomAuthenticationStateProvider)AuthStateProvider;
+        var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
+        entry.InsertedById = int.Parse(authState.User.Claims.First().Value);
+
+        clientPassService.AddUse(pass.ClientPassId);
+        entriesService.CreateEntry(entry);
+
+        StateHasChanged();
+    }
+}
