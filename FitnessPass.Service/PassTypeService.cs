@@ -13,25 +13,15 @@ namespace FitnessPass.Service
     public class PassTypeService
     {
         private AppDbContext appDbContext;
-        private GymService gymService;
 
-        public PassTypeService(AppDbContext appDbContext, GymService gymService)
+        public PassTypeService(AppDbContext appDbContext)
         {
             this.appDbContext = appDbContext;
-            this.gymService = gymService;
         }
 
         public List<PassType> GetPassTypes()
         {
-            //var passTypes = appDbContext.PassType.ToList();
-            //foreach (var passType in passTypes)
-            //{
-            //    passType.Gym = gymService.GetGymById(passType.GymId);
-            //}
-
-            //return passTypes;
-
-            return appDbContext.PassType.ToList();
+            return appDbContext.PassType.Include(x => x.Gym).ToList();
         }
 
         public void AddPassType(PassType passType)

@@ -43,9 +43,8 @@
     </div>
     <div class="form-group">
         <label for="gymId">Gym</label>
-        <input type="number" class="form-control" id="gymId" @bind="passType.GymId" />
-@*        <select id="gymId" @bind="passType.GymId">
-            <option value="">Select a Gym</option>
+        <br>
+        <select id="gymId" @bind="passType.GymId">
             @if (gyms != null)
             {
                 @foreach (var gym in gyms)
@@ -57,7 +56,7 @@
             {
                 <option value=0>No gyms</option>
             }
-        </select>*@
+        </select>
     </div>
     <div class="form-group">
         <label for="startTime">Start Time</label>
@@ -146,6 +145,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        gyms = /*gymService.GetGyms();*/ new List<Gym>();
+        gyms = gymService.GetGyms();
     }
 }
