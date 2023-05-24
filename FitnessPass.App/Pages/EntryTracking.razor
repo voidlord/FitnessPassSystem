@@ -1,4 +1,5 @@
 ﻿@page "/entry-tracking"
+@attribute [Authorize]
 
 @inject ClientService clientService
 @inject ClientPassService clientPassService
@@ -6,11 +7,11 @@
 
 <h3>EntryTracking</h3>
 
-<div class="form-group">
+<div>
     <input type="text" class="form-control" @bind="@barCode" placeholder="Enter barcode" />
 </div>
 <br>
-<button class="btn btn-primary" @onclick="FindBarcode">Find</button>
+<button type="button" class="btn btn-primary" @onclick="FindBarcode">Find</button>
 
 @if (error) {
     <div class="alert alert-danger">
@@ -52,38 +53,40 @@
         </tbody>
         <br>
         <br>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Uses</th>
-                <th>Time</th>
-                <th>Expires on</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var pass in passes) {
+        @if (passes != null && passes.Count > 0) {
+            <thead>
                 <tr>
-                    <td>@pass.PassType.Name</td>
-                    <td>@GetUsesLeft(pass.PassType.EntriesValidFor, pass.EntryCount)</td>
-                    <td>@pass.PassType.StartTime-@pass.PassType.EndTime</td>
-                    <td>@GetExpireDate(pass)</td>
-                    <td>
-                        @if (IsValid(pass))
-                        {
-                            @if (!used.Contains(pass.ClientPassId))
-                            {
-                                <button class="btn btn-primary" style="border-color:darkgreen; background-color:green" @onclick="() => Entry(pass)">Entry</button>
-                            } else {
-                                <button class="btn btn-primary" style="border-color:darkorange; background-color:orange">Used</button>
-                            }
-                        } else {
-                            <button class="btn btn-primary" style="border-color:gray; background-color:darkgray">Expired</button>
-                        }
-                    </td>
+                    <th>Name</th>
+                    <th>Uses</th>
+                    <th>Time</th>
+                    <th>Expires on</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
+            </thead>
+            <tbody>
+                @foreach (var pass in passes) {
+                    <tr>
+                        <td>@pass.PassType.Name</td>
+                        <td>@GetUsesLeft(pass.PassType.EntriesValidFor, pass.EntryCount)</td>
+                        <td>@pass.PassType.StartTime-@pass.PassType.EndTime</td>
+                        <td>@GetExpireDate(pass)</td>
+                        <td>
+                            @if (IsValid(pass))
+                            {
+                                @if (!used.Contains(pass.ClientPassId))
+                                {
+                                    <button class="btn btn-primary" style="border-color:darkgreen; background-color:green" @onclick="() => Entry(pass)">Entry</button>
+                                } else {
+                                    <button class="btn btn-primary" style="border-color:darkorange; background-color:orange">Used</button>
+                                }
+                            } else {
+                                <button class="btn btn-primary" style="border-color:gray; background-color:darkgray">Expired</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
     </table>
 }
 
@@ -105,6 +108,7 @@
             error = true;
         } else {
             passes = clientPassService.GetPassesByClientId(client.ClientId);
+            error = false;
         }
     }
 
