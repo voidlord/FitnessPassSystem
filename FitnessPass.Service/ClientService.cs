@@ -13,12 +13,12 @@ namespace FitnessPass.Service
 {
     public class ClientService
     {
+        private AppDbContext appDbContext;
+
         public ClientService(AppDbContext appDbContext)
         {
             this.appDbContext = appDbContext;
         }
-
-        private AppDbContext appDbContext;
 
         public Task AddClient(Client client)
         {

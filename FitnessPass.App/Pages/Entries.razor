@@ -1,0 +1,27 @@
+﻿@page "/entries"
+
+@inject EntriesService entriesService
+
+<h3>Entries</h3>
+
+@code {
+    List<FitnessPass.Model.Entries> entries;
+    string searchQuery;
+
+    void Search()
+    {
+        if (String.IsNullOrWhiteSpace(searchQuery))
+        {
+            entries = entriesService.GetEntries();
+        }
+        else
+        {
+            //entries = entriesService.SearchClientByName(searchQuery);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Search();
+    }
+}

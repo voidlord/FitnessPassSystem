@@ -24,6 +24,7 @@ namespace FitnessPassApp
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<PassTypeService>();
             builder.Services.AddScoped<GymService>();
+            builder.Services.AddScoped<EntriesService>();
 
             builder.Services.AddScoped<ProtectedSessionStorage>();
             builder.Services.AddScoped<ClaimsPrincipal>();

@@ -12,14 +12,14 @@ namespace FitnessPass.Service
 {
     public class PassTypeService
     {
+        private AppDbContext appDbContext;
+        private GymService gymService;
+
         public PassTypeService(AppDbContext appDbContext, GymService gymService)
         {
             this.appDbContext = appDbContext;
             this.gymService = gymService;
         }
-
-        private AppDbContext appDbContext;
-        private GymService gymService;
 
         public List<PassType> GetPassTypes()
         {
