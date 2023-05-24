@@ -1,4 +1,5 @@
 ﻿@page "/employees/{userId:int}"
+@attribute [Authorize]
 
 @inject NavigationManager navigationManager
 @inject UserService userService

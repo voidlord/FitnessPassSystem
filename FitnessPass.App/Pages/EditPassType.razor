@@ -1,4 +1,5 @@
 ﻿@page "/pass-types/{passTypeId:int}"
+@attribute [Authorize]
 
 @inject PassTypeService passTypeService
 @inject GymService gymService
