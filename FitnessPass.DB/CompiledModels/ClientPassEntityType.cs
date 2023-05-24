@@ -2,6 +2,8 @@
 using System;
 using System.Reflection;
 using FitnessPass.Model;
+using FitnessPassApp.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 #pragma warning disable 219, 612, 618
@@ -26,13 +28,6 @@ namespace FitnessPass.DB.CompiledModels
                 valueGenerated: ValueGenerated.OnAdd,
                 afterSaveBehavior: PropertySaveBehavior.Throw);
             clientPassId.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            var barCode = runtimeEntityType.AddProperty(
-                "BarCode",
-                typeof(string),
-                propertyInfo: typeof(ClientPass).GetProperty("BarCode", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(ClientPass).GetField("<BarCode>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-            barCode.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var clientId = runtimeEntityType.AddProperty(
                 "ClientId",
@@ -62,19 +57,12 @@ namespace FitnessPass.DB.CompiledModels
                 fieldInfo: typeof(ClientPass).GetField("<FirstUsedOn>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
             firstUsedOn.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-            var gymId = runtimeEntityType.AddProperty(
-                "GymId",
+            var passTypeId = runtimeEntityType.AddProperty(
+                "PassTypeId",
                 typeof(int),
-                propertyInfo: typeof(ClientPass).GetProperty("GymId", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(ClientPass).GetField("<GymId>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-            gymId.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
-
-            var passId = runtimeEntityType.AddProperty(
-                "PassId",
-                typeof(int),
-                propertyInfo: typeof(ClientPass).GetProperty("PassId", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(ClientPass).GetField("<PassId>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-            passId.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+                propertyInfo: typeof(ClientPass).GetProperty("PassTypeId", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(ClientPass).GetField("<PassTypeId>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            passTypeId.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var salePrice = runtimeEntityType.AddProperty(
                 "SalePrice",
@@ -94,7 +82,49 @@ namespace FitnessPass.DB.CompiledModels
                 new[] { clientPassId });
             runtimeEntityType.SetPrimaryKey(key);
 
+            var index = runtimeEntityType.AddIndex(
+                new[] { clientId });
+
+            var index0 = runtimeEntityType.AddIndex(
+                new[] { passTypeId });
+
             return runtimeEntityType;
+        }
+
+        public static RuntimeForeignKey CreateForeignKey1(RuntimeEntityType declaringEntityType, RuntimeEntityType principalEntityType)
+        {
+            var runtimeForeignKey = declaringEntityType.AddForeignKey(new[] { declaringEntityType.FindProperty("ClientId")! },
+                principalEntityType.FindKey(new[] { principalEntityType.FindProperty("ClientId")! })!,
+                principalEntityType,
+                deleteBehavior: DeleteBehavior.Cascade,
+                required: true);
+
+            var client = declaringEntityType.AddNavigation("Client",
+                runtimeForeignKey,
+                onDependent: true,
+                typeof(Client),
+                propertyInfo: typeof(ClientPass).GetProperty("Client", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(ClientPass).GetField("<Client>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+            return runtimeForeignKey;
+        }
+
+        public static RuntimeForeignKey CreateForeignKey2(RuntimeEntityType declaringEntityType, RuntimeEntityType principalEntityType)
+        {
+            var runtimeForeignKey = declaringEntityType.AddForeignKey(new[] { declaringEntityType.FindProperty("PassTypeId")! },
+                principalEntityType.FindKey(new[] { principalEntityType.FindProperty("PassId")! })!,
+                principalEntityType,
+                deleteBehavior: DeleteBehavior.Cascade,
+                required: true);
+
+            var passType = declaringEntityType.AddNavigation("PassType",
+                runtimeForeignKey,
+                onDependent: true,
+                typeof(PassType),
+                propertyInfo: typeof(ClientPass).GetProperty("PassType", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(ClientPass).GetField("<PassType>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+            return runtimeForeignKey;
         }
 
         public static void CreateAnnotations(RuntimeEntityType runtimeEntityType)

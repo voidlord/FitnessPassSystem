@@ -19,6 +19,12 @@ namespace FitnessPass.DB.CompiledModels
             var user = UserEntityType.Create(this);
             var passType = PassTypeEntityType.Create(this);
 
+            ClientPassEntityType.CreateForeignKey1(clientPass, client);
+            ClientPassEntityType.CreateForeignKey2(clientPass, passType);
+            EntriesEntityType.CreateForeignKey1(entries, client);
+            EntriesEntityType.CreateForeignKey2(entries, passType);
+            PassTypeEntityType.CreateForeignKey1(passType, gym);
+
             ClientEntityType.CreateAnnotations(client);
             ClientPassEntityType.CreateAnnotations(clientPass);
             EntriesEntityType.CreateAnnotations(entries);

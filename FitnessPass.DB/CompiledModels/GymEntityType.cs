@@ -36,7 +36,7 @@ namespace FitnessPass.DB.CompiledModels
 
             var name = runtimeEntityType.AddProperty(
                 "Name",
-                typeof(int),
+                typeof(string),
                 propertyInfo: typeof(Gym).GetProperty("Name", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 fieldInfo: typeof(Gym).GetField("<Name>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
             name.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
