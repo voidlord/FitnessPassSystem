@@ -1,5 +1,7 @@
 ﻿@page "/fitness-rooms"
 
+@inject GymService gymService;
+
 <h3>Fitness Rooms</h3>
 
 @if (gyms == null || gyms.Count == 0)
@@ -44,6 +46,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        gyms = /*gymService.GetGyms();*/ new List<Gym>();
+        gyms = gymService.GetGyms();
     }
 }

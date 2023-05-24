@@ -19,10 +19,6 @@ namespace FitnessPass.Service
 
         public Gym GetGymById(int id)
         {
-            //var query = from st in appDbContext.Gym
-            //            where st.GymId == id
-            //            select st;
-            //return query.First();
             return appDbContext.Gym.Find(id) ?? new Gym();
         }
 
