@@ -43,6 +43,10 @@ namespace FitnessPass.Service
         {
             return appDbContext.Client.Find(id) ?? new Client();
         }
+        
+        public Client GetClientByBarcode(string barCode) {
+            return appDbContext.Client.Where(x => x.BarCode == barCode).ToList().FirstOrDefault();
+        }
 
         public void UpdateClient(Client client) 
         {

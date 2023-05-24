@@ -112,7 +112,7 @@ namespace FitnessPass.DB.CompiledModels
         public static RuntimeForeignKey CreateForeignKey2(RuntimeEntityType declaringEntityType, RuntimeEntityType principalEntityType)
         {
             var runtimeForeignKey = declaringEntityType.AddForeignKey(new[] { declaringEntityType.FindProperty("PassTypeId")! },
-                principalEntityType.FindKey(new[] { principalEntityType.FindProperty("PassId")! })!,
+                principalEntityType.FindKey(new[] { principalEntityType.FindProperty("PassTypeId")! })!,
                 principalEntityType,
                 deleteBehavior: DeleteBehavior.Cascade,
                 required: true);

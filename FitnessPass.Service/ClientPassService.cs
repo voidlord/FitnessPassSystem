@@ -1,5 +1,6 @@
 ﻿using FitnessPass.DB;
 using FitnessPass.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace FitnessPass.Service {
         }
 
         public List<ClientPass> GetPassesByClientId(int clientId) {
-            return appDbContext.ClientPass.Where(x => x.ClientId == clientId).ToList();
+            return appDbContext.ClientPass.Where(x => x.ClientId == clientId).Include(x => x.PassType).ToList();
         }
     }
 }

@@ -20,14 +20,14 @@ namespace FitnessPass.DB.CompiledModels
                 typeof(PassType),
                 baseEntityType);
 
-            var passId = runtimeEntityType.AddProperty(
-                "PassId",
+            var passTypeId = runtimeEntityType.AddProperty(
+                "PassTypeId",
                 typeof(int),
-                propertyInfo: typeof(PassType).GetProperty("PassId", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(PassType).GetField("<PassId>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                propertyInfo: typeof(PassType).GetProperty("PassTypeId", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(PassType).GetField("<PassTypeId>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 valueGenerated: ValueGenerated.OnAdd,
                 afterSaveBehavior: PropertySaveBehavior.Throw);
-            passId.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            passTypeId.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             var daysValidFor = runtimeEntityType.AddProperty(
                 "DaysValidFor",
@@ -93,7 +93,7 @@ namespace FitnessPass.DB.CompiledModels
             startTime.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var key = runtimeEntityType.AddKey(
-                new[] { passId });
+                new[] { passTypeId });
             runtimeEntityType.SetPrimaryKey(key);
 
             var index = runtimeEntityType.AddIndex(

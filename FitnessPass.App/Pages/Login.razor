@@ -43,6 +43,7 @@
     public async Task Authenticate() {
         try {
             User user = userService.Login(_credential.Email, _credential.Password);
+
             if (user != null) {
                 var customAuthStateProvider = (Auth.CustomAuthenticationStateProvider)AuthState;
                 await customAuthStateProvider.UpdateAuthenticationState(new Auth.UserSession
@@ -52,6 +53,8 @@
                         Role = user.IsAdmin ? "Admin" : "User"
                 });
                 navigationManager.NavigateTo("/", true);
+            } else {
+                await jsRuntime.InvokeVoidAsync("alert", "Invalid credentials");
             }
         } catch {
             await jsRuntime.InvokeVoidAsync("alert", "Invalid credentials");

@@ -16,7 +16,7 @@ namespace FitnessPass.Service {
         }
 
         public User Login(string email, string password) {
-            return appDbContext.User.Where(x => x.Email == email && x.Password == password).ToList().First();
+            return appDbContext.User.Where(x => x.Email == email && x.Password == password).ToList().FirstOrDefault();
         }
 
         public List<User> GetUsers() 

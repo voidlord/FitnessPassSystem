@@ -13,7 +13,7 @@ namespace FitnessPassApp.Data
     public class PassType
     {
         [Key]
-        public int PassId { get; set; }
+        public int PassTypeId { get; set; }
         public string Name { get; set; }
         public float Price { get; set; }
         public int DaysValidFor { get; set; }
