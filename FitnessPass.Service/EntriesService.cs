@@ -24,14 +24,7 @@ namespace FitnessPass.Service
 
         public List<Entries> GetEntries() 
         {
-            //var query = appDbContext.Entries.FromSql($"SELECT *  FROM [Entries] e JOIN [Client] c ON e.ClientId = c.ClientId JOIN [PassType] p ON e.PassTypeId = p.PassId");
-            //return query.ToList();
-            var list = appDbContext.Entries.ToList();
-            //list.ForEach(x => {
-            //    x.Client = clientService.GetClientById(x.ClientId);
-            //    x.PassType = passTypeService.GetPassTypeById(x.PassTypeId);
-            //});
-            return list;
+            return appDbContext.Entries.Include(x => x.Client).Include(x => x.PassType).ToList();
         }
 
         public List<Entries> searchEntriesByClientName(string name) 
@@ -39,7 +32,7 @@ namespace FitnessPass.Service
             return GetEntries().Where(x => x.Client.Name.Contains(name) && x.Client.IsDeleted == false).ToList();
         }
 
-        public List<Entries> searchEntriesBarCode(string barCode)
+        public List<Entries> searchEntriesByBarCode(string barCode)
         {
             return GetEntries().Where(x => x.Client.BarCode.Contains(barCode) && x.Client.IsDeleted == false).ToList();
         }

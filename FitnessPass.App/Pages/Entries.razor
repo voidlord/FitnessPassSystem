@@ -4,9 +4,54 @@
 
 <h3>Entries</h3>
 
+<div class="form-group">
+    <label for="name">Search based on: </label>
+    <select id="searchOption" @bind="searchOption">
+        <option value=1>Client name</option>
+        <option value=2>Bar code</option>
+        <option value=3>Pass type</option>
+        <option value=4>Date</option>
+    </select>
+    <input type="text" class="form-control" id="name" @bind="@searchQuery">
+    <br>
+    <button class="btn btn-primary" @onclick="Search">Search</button>
+</div>
+
+@if (entries == null || entries.Count == 0)
+{
+    <br>
+    <br>
+    <p>No results</p>
+}
+
+@if (entries != null && entries.Count != 0)
+{
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Client name</th>
+                <th>Pass type</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in entries)
+            {
+                <tr>
+                    <td>@entry.Client.Name</td>
+                    <td>@entry.PassType.Name</td>
+                    <td>@entry.InsertedOn</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 @code {
-    List<FitnessPass.Model.Entries> entries;
+    List<Model.Entries> entries;
     string searchQuery;
+    int searchOption = 1;
 
     void Search()
     {
@@ -16,7 +61,13 @@
         }
         else
         {
-            //entries = entriesService.SearchClientByName(searchQuery);
+            entries = searchOption switch
+            {
+                1 => entriesService.searchEntriesByClientName(searchQuery),
+                2 => entriesService.searchEntriesByBarCode(searchQuery),
+                3 => entriesService.searchEntriesByPassType(searchQuery),
+                4 => entriesService.searchEntriesByInsertedDate(searchQuery)
+            };
         }
     }
 
