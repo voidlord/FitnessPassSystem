@@ -60,7 +60,7 @@
         <video id="videoFeed" width="320" height="240" /><canvas class="d-none" id="currentFrame" width="320" height="240" /><br />
         <button type="button" class="btn btn-primary mb-3" @onclick="OpenCamera">Open</button>
         <button type="button" class="btn btn-primary mb-3" @onclick="CloseCamera">Close</button>
-        <button type="button" class="btn btn-primary mb-3" @onclick="CaptureFrame">Capture</button><br />
+        <button type="button" class="btn btn-primary mb-3" style="border-color:darkgreen; background-color:green" @onclick="CaptureFrame">Capture</button><br />
         @if (!string.IsNullOrEmpty(frameUri)) {
             <img src="@frameUri" />
         }
