@@ -12,14 +12,10 @@ namespace FitnessPass.Service
     public class EntriesService
     {
         private AppDbContext appDbContext;
-        private ClientService clientService;
-        private PassTypeService passTypeService;
 
-        public EntriesService(AppDbContext appDbContext, ClientService clientService, PassTypeService passTypeService) 
+        public EntriesService(AppDbContext appDbContext) 
         {
             this.appDbContext = appDbContext;
-            this.clientService = clientService;
-            this.passTypeService = passTypeService;
         }
 
         public List<Entries> GetEntries() 
