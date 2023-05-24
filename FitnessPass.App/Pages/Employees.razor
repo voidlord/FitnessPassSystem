@@ -7,9 +7,10 @@
 <nav>
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a class="nav-link" href="/employees/add">Add Employee</a>
+            <button class="btn btn-primary" @onclick="@(()=> navigationManager.NavigateTo("/employees/add"))">Add Employee</button>
         </li>
     </ul>
+    <br>
 </nav>
 
 <h3>Employees</h3>

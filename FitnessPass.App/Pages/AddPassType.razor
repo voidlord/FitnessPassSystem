@@ -2,13 +2,15 @@
 
 @inject PassTypeService passTypeService
 @inject GymService gymService
+@inject NavigationManager navigationManager
 
 <nav>
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a class="nav-link" href="/pass-types">Pass Types</a>
+            <button class="btn btn-primary" @onclick="@(()=> navigationManager.NavigateTo("/pass-types"))">Pass Types</button>
         </li>
     </ul>
+    <br>
 </nav>
 
 <h3>Add Pass Type</h3>

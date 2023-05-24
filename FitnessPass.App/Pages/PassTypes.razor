@@ -8,9 +8,10 @@
 <nav>
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a class="nav-link" href="/pass-types/add">Add Pass Type</a>
+            <button class="btn btn-primary" @onclick="@(()=> navigationManager.NavigateTo("/pass-types/add"))">Add Pass Type</button>
         </li>
     </ul>
+    <br>
 </nav>
 
 <h3>Pass Types</h3>
