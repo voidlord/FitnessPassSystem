@@ -1,0 +1,17 @@
+﻿@page "/logout"
+@attribute [Authorize]
+
+@inject NavigationManager navigationManager
+
+@code {
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        var customAuthStateProvider = (Auth.CustomAuthenticationStateProvider)AuthStateProvider;
+
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+
+        navigationManager.NavigateTo("url", true);
+    }
+}
