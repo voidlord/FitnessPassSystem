@@ -18,5 +18,20 @@ namespace FitnessPass.Service {
         public List<ClientPass> GetPassesByClientId(int clientId) {
             return appDbContext.ClientPass.Where(x => x.ClientId == clientId).Include(x => x.PassType).ToList();
         }
+
+        public List<ClientPass> GetPasses()
+        {
+            return appDbContext.ClientPass.Include(x => x.Client).Include(x => x.PassType).ToList();
+        }
+
+        public List<ClientPass> GetPassesByName(string name)
+        {
+            return appDbContext.ClientPass.Include(x => x.Client).Include(x => x.PassType).Where(x => x.Client.Name.Contains(name)).ToList();
+        }
+
+        public List<ClientPass> GetPassesByBarCode(string barCode)
+        {
+            return appDbContext.ClientPass.Include(x => x.Client).Include(x => x.PassType).Where(x => x.Client.BarCode.Contains(barCode)).ToList();
+        }
     }
 }
