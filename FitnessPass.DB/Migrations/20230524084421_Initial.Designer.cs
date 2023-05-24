@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessPass.DB.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230522065813_ModifyPassTypeTableGym")]
-    partial class ModifyPassTypeTableGym
+    [Migration("20230524084421_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,10 +84,6 @@ namespace FitnessPass.DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientPassId"));
 
-                    b.Property<string>("BarCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
@@ -100,10 +96,7 @@ namespace FitnessPass.DB.Migrations
                     b.Property<DateTime>("FirstUsedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GymId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PassId")
+                    b.Property<int>("PassTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("SalePrice")
@@ -113,6 +106,10 @@ namespace FitnessPass.DB.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("ClientPassId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("PassTypeId");
 
                     b.ToTable("ClientPass");
                 });
@@ -125,14 +122,7 @@ namespace FitnessPass.DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EntryId"));
 
-                    b.Property<string>("BarCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GymId")
                         .HasColumnType("int");
 
                     b.Property<int>("InsertedById")
@@ -141,10 +131,14 @@ namespace FitnessPass.DB.Migrations
                     b.Property<DateTime>("InsertedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PassId")
+                    b.Property<int>("PassTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("EntryId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("PassTypeId");
 
                     b.ToTable("Entries");
                 });
@@ -160,8 +154,9 @@ namespace FitnessPass.DB.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Name")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GymId");
 
@@ -243,6 +238,44 @@ namespace FitnessPass.DB.Migrations
                     b.HasIndex("GymId");
 
                     b.ToTable("PassType");
+                });
+
+            modelBuilder.Entity("FitnessPass.Model.ClientPass", b =>
+                {
+                    b.HasOne("FitnessPass.Model.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FitnessPassApp.Data.PassType", "PassType")
+                        .WithMany()
+                        .HasForeignKey("PassTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("PassType");
+                });
+
+            modelBuilder.Entity("FitnessPass.Model.Entries", b =>
+                {
+                    b.HasOne("FitnessPass.Model.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FitnessPassApp.Data.PassType", "PassType")
+                        .WithMany()
+                        .HasForeignKey("PassTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("PassType");
                 });
 
             modelBuilder.Entity("FitnessPassApp.Data.PassType", b =>
