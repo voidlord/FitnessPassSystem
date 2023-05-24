@@ -16,11 +16,11 @@ namespace FitnessPass.App.Auth
             this._sessionStorage = sessionStorage;
         }
 
-        private ClaimsPrincipal GetUser(string id, string email, string role) {
+        private ClaimsPrincipal GetUser(UserSession userSession) {
             var identity = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Sid, id),
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Sid, userSession.Id.ToString()),
+                new Claim(ClaimTypes.Email, userSession.Email),
+                new Claim(ClaimTypes.Role, userSession.Role)
             }, "Authentication type");
 
             return new ClaimsPrincipal(identity);
@@ -44,7 +44,7 @@ namespace FitnessPass.App.Auth
                     return await Task.FromResult(new AuthenticationState(this.GetAnonymous()));
                 }
 
-                var claimsPrincipal = new ClaimsPrincipal(GetUser(userSession.Id.ToString(), userSession.Email, userSession.Role));
+                var claimsPrincipal = new ClaimsPrincipal(GetUser(userSession));
 
                 return await Task.FromResult(new AuthenticationState(claimsPrincipal));
             } catch {
@@ -60,7 +60,7 @@ namespace FitnessPass.App.Auth
                 claimsPrincipal = GetAnonymous();
             } else {
                 await _sessionStorage.SetAsync("UserSession", userSession);
-                claimsPrincipal = this.GetUser(userSession.Id.ToString(), userSession.Email, userSession.Role);
+                claimsPrincipal = this.GetUser(userSession);
             }
 
             this.NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
